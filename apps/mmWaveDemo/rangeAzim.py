@@ -8,9 +8,33 @@ from numpy import fliplr
 import time
 from multiprocessing import Queue
 import threading
+import sys
+import signal
+import zmq
+from multiprocessing import Process
+
+def server():
+    context = zmq.Context()
+    socket = context.socket(zmq.SUB)
+    socket.setsockopt_string(zmq.SUBSCRIBE, '')
+    socket.bind("tcp://*:%s" % 5555)
+    while True:
+        message = socket.recv()
+        print("Received request  %s" % message)
+
+
+
+Process(target=server).start()
 
 ser = serial.Serial('/dev/ttyACM1', 921600)
-ser.isOpen()
+
+
+def signal_handler(signal, frame):
+    ser.close()
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
+
 
 serialQueue = Queue()
 
@@ -21,7 +45,7 @@ bytes_array = []
 q = []
 qq = []
 buff = []
-plt.ion()
+# plt.ion()
 plt.figure()
 
 range_width = 3  # set to area you want to inspect
@@ -48,8 +72,8 @@ rangeMap = np.arange(256) * rangeIdxToMeters
 posX = np.matmul(np.reshape(rangeMap, (256, 1)), np.sin(theta))
 posY = np.matmul(np.reshape(rangeMap, (256, 1)), np.cos(theta))
 
-xlin = np.linspace(-range_width, range_width, 100)
-ylin = np.linspace(0, range_depth, 100)
+xlin = np.linspace(-range_width, range_width, 50)
+ylin = np.linspace(0, range_depth, 50)
 
 X, Y = np.meshgrid(xlin, ylin)
 rangeAzBinLength = numTxAzimAnt * numRxAnt * numRangeBins * 4
@@ -70,7 +94,6 @@ def readSerial():
     while True:
 
         serialQueue.put(ser.read(65536))
-
 
 
 serialThread = threading.Thread(target=readSerial)
@@ -96,6 +119,7 @@ while (True):
 
                 bytesAvailable = 0
                 for frame in range(0, len(frameIndices) - 1):
+
 
                     line = bytearray(buff[frameIndices[frame]:frameIndices[frame + 1]])
                     idx = 28  # After ignoring header, version, totalPacketLength, frameNumber, timeCpuCycles, platform
@@ -165,10 +189,15 @@ while (True):
                             Qq = np.transpose(QQ)
                             qq = np.delete(Qq, 0, axis=1)
 
-                            gd = griddata(inPts, fliplr(qq).ravel(), outPts, 'cubic')
+                            gd = griddata(inPts, fliplr(qq).ravel(), outPts, 'nearest')
 
-                            plt.contourf(X, Y, gd, antialiasing=True, extent=extent)
+                            ## Simple surface plot example
+                            ## x, y values are not specified, so assumed to be 0:50
+
+                            time_now = time.time()
+                            plt.contourf(X, Y, gd)
                             plt.pause(0.01)
+                            time.sleep(0.1)
                             idx = 0
 
                             i = 0

@@ -68,11 +68,13 @@ def onMessage(mqttc, obj, msg):
 
 
 params = {}
-params["url"] = "10.156.14.144"
-params["port"] = 1883
+params["url"] = "10.156.14.6"
+params["port"] = 2333
 params["timeout"] = 10
 params["topic"] = "radar"
 params["onMessage"] = onMessage
+params["username"] = "rbccps"
+params["password"] = "rbccps@123"
 
 server = MQTTPubSub(params)
 server_rc = server.run()
