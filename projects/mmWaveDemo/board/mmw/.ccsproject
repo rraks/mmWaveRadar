@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?ccsproject version="1.0"?>
+<projectOptions>
+	<ccsVersion value="7.2.0"/>
+	<deviceVariant value="Cortex R.IWR1443"/>
+	<deviceFamily value="TMS470"/>
+	<deviceEndianness value="little"/>
+	<codegenToolVersion value="16.9.1.LTS"/>
+	<isElfFormat value="true"/>
+	<connection value="common/targetdb/connections/TIXDS110_Connection.xml"/>
+	<linkerCommandFile value="mss_mmw_linker.cmd"/>
+	<rts value="libc.a"/>
+	<createSlaveProjects value=""/>
+	<templateProperties value="id=mmw.projectspec.mmw,type=rtsc,products=com.ti.rtsc.SYSBIOS:6.50.01.12;com.ti.MMWAVE_SDK:1.0.0.05;,xdcToolsVersion=3.50.00.10_core,target=ti.targets.arm.elf.R4F,platform=ti.platforms.cortexR:IWR16XX:false:200,endianness=little,output_format=elf,buildProfile=release,"/>
+	<origin value="/home/thepro/ti/mmwave_training_1_2_1/demos/demo0005-mmwave-sdk-16xx/demo0005_mmwave_sdk_16xx_pjt/mmw.projectspec"/>
+	<filesToOpen value=""/>
+	<isTargetManual value="true"/>
+</projectOptions>
